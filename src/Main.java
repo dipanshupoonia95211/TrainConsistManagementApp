@@ -1,22 +1,36 @@
+import java.util.Arrays;
+
 class TrainConsistManagementApp {
 
     public static void main(String[] args) {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // Array of bogie IDs
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        // Unsorted array of bogie IDs
+        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+
+        // Sort before binary search (precondition)
+        Arrays.sort(bogieIds);
 
         // Search key
         String target = "BG309";
 
-        // Linear Search
+        // Binary Search
+        int low = 0, high = bogieIds.length - 1;
         boolean found = false;
 
-        for (String id : bogieIds) {
-            if (id.equals(target)) {
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            int cmp = bogieIds[mid].compareTo(target);
+
+            if (cmp == 0) {
                 found = true;
-                break; // early termination
+                break;
+            } else if (cmp < 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
             }
         }
 
