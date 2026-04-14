@@ -1,19 +1,33 @@
-class InvalidCapacityException extends Exception {
-    public InvalidCapacityException(String message) {
+class CargoSafetyException extends RuntimeException {
+    public CargoSafetyException(String message) {
         super(message);
     }
 }
 
-class PassengerBogie {
-    String name;
-    int capacity;
+class GoodsBogie {
+    String type;
+    String cargo;
 
-    PassengerBogie(String name, int capacity) throws InvalidCapacityException {
-        if (capacity <= 0) {
-            throw new InvalidCapacityException("Capacity must be greater than zero");
+    GoodsBogie(String type) {
+        this.type = type;
+    }
+
+    void assignCargo(String cargo) {
+        try {
+            // Unsafe rule: Rectangular cannot carry Petroleum
+            if (type.equals("Rectangular") && cargo.equals("Petroleum")) {
+                throw new CargoSafetyException("Unsafe: Rectangular bogie cannot carry Petroleum");
+            }
+
+            this.cargo = cargo;
+            System.out.println("Cargo assigned: " + type + " -> " + cargo);
+
+        } catch (CargoSafetyException e) {
+            System.out.println("Error: " + e.getMessage());
+
+        } finally {
+            System.out.println("Cargo assignment attempt completed.");
         }
-        this.name = name;
-        this.capacity = capacity;
     }
 }
 
@@ -23,15 +37,16 @@ class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        try {
-            PassengerBogie b1 = new PassengerBogie("Sleeper", 72);
-            System.out.println("Created: " + b1.name + " -> " + b1.capacity);
+        GoodsBogie b1 = new GoodsBogie("Cylindrical");
+        GoodsBogie b2 = new GoodsBogie("Rectangular");
 
-            PassengerBogie b2 = new PassengerBogie("AC Chair", -10); // invalid
-            System.out.println("Created: " + b2.name + " -> " + b2.capacity);
+        // Safe assignment
+        b1.assignCargo("Petroleum");
 
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        // Unsafe assignment (handled)
+        b2.assignCargo("Petroleum");
+
+        // Program continues
+        b2.assignCargo("Coal");
     }
 }
