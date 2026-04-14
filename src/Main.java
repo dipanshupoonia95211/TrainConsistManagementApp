@@ -1,5 +1,15 @@
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+
+class GoodsBogie {
+    String type;   // Cylindrical, Rectangular
+    String cargo;  // Petroleum, Coal, etc.
+
+    GoodsBogie(String type, String cargo) {
+        this.type = type;
+        this.cargo = cargo;
+    }
+}
 
 class TrainConsistManagementApp {
 
@@ -7,29 +17,24 @@ class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // Sample inputs
-        String trainId = "TRN-1234";
-        String cargoCode = "PET-AB";
+        // Goods bogie list
+        List<GoodsBogie> goods = new ArrayList<>();
+        goods.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        goods.add(new GoodsBogie("Rectangular", "Coal"));
+        goods.add(new GoodsBogie("Cylindrical", "Petroleum"));
 
-        // Regex patterns
-        Pattern trainPattern = Pattern.compile("TRN-\\d{4}");
-        Pattern cargoPattern = Pattern.compile("PET-[A-Z]{2}");
+        // Safety validation
+        boolean isSafe = goods.stream()
+                .allMatch(b ->
+                        !b.type.equals("Cylindrical") ||
+                                b.cargo.equals("Petroleum")
+                );
 
-        // Matchers
-        Matcher trainMatcher = trainPattern.matcher(trainId);
-        Matcher cargoMatcher = cargoPattern.matcher(cargoCode);
-
-        // Validation
-        if (trainMatcher.matches()) {
-            System.out.println("Valid Train ID: " + trainId);
+        // Result
+        if (isSafe) {
+            System.out.println("Train is SAFE for operation.");
         } else {
-            System.out.println("Invalid Train ID: " + trainId);
-        }
-
-        if (cargoMatcher.matches()) {
-            System.out.println("Valid Cargo Code: " + cargoCode);
-        } else {
-            System.out.println("Invalid Cargo Code: " + cargoCode);
+            System.out.println("Train is NOT SAFE for operation.");
         }
     }
 }
