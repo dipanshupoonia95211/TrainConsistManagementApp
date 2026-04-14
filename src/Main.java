@@ -1,6 +1,7 @@
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 class Bogie {
     String name;
@@ -18,21 +19,24 @@ class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // List of Bogie objects
+        // Bogie list
         List<Bogie> bogies = new ArrayList<>();
-
-        // Add bogies
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("First Class", 24));
 
-        // Sort by capacity
-        bogies.sort(Comparator.comparingInt(b -> b.capacity));
+        // Group by bogie type (name)
+        Map<String, List<Bogie>> grouped = bogies.stream()
+                .collect(Collectors.groupingBy(b -> b.name));
 
-        // Display sorted bogies
-        System.out.println("Bogies sorted by capacity:");
-        for (Bogie b : bogies) {
-            System.out.println(b.name + " -> " + b.capacity);
+        // Display grouped result
+        System.out.println("Grouped Bogies:");
+        for (Map.Entry<String, List<Bogie>> entry : grouped.entrySet()) {
+            System.out.println(entry.getKey() + ":");
+            for (Bogie b : entry.getValue()) {
+                System.out.println("  -> " + b.capacity);
+            }
         }
     }
 }
